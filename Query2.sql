@@ -7,7 +7,6 @@ FROM
 WHERE
     SHIFR_NAPR IN ('09.03.02' , '44.03.01');
     
-    
 SELECT 
     *
 FROM
@@ -15,131 +14,113 @@ FROM
 WHERE
     `dob` BETWEEN '2000-01-01' AND '2000-12-31'
         AND `dob` NOT IN ('2000-01-01' , '2000-12-04');
-        
-        
 SELECT 
     *
 FROM
     students
 WHERE
-    `name` BETWEEN 'М' AND 'Ц';
-    
-    
+    `name` BETWEEN 'М' AND 'П';
 SELECT 
     *
 FROM
     students
 WHERE
-    `name` LIKE '%мария%';
-    
-    
+    'name' LIKE 'M%';
 SELECT 
     *
 FROM
     students
 WHERE
-    `name` REGEXP '[R]';
+    'name' LIKE '%$%%' ESCAPE '$';
     
-    
+SELECT 
+    *
+FROM
+    sutudents
+WHERE
+    'name' REGEXP '[н]';
+
 SELECT 
     *
 FROM
     students
 WHERE
-    `name` LIKE '%$%' ESCAPE '$';
-    
-    
-SELECT 
-    *
-FROM
-    students
-WHERE
-    `name` LIKE '%@_%' ESCAPE '@';
+    'docum' IS NULL;
     
 SELECT 
     *
 FROM
     students
 WHERE
-    `name` LIKE '%@@@%%' ESCAPE '@';
-    
-    
-/* Оператор IS NULL
-*/
+    'docum' IS NOT NULL;
 SELECT 
     *
 FROM
     students
 WHERE
-    `docum` IS NULL;
-    
-SELECT 
-    *
-FROM
-    students
-WHERE
-    `docum` IS NOT NULL
-        AND `idgroups` IS NULL;
-/* Агрегатные функции COUNT(), SUM(), AVG(), MAX(), MIN()
-*/
+    'docum' IS NOT NULL
+        AND 'idgroups' IS NULL;
+	
 SELECT 
     COUNT(idstud)
 FROM
     students;
-    
-    
-SELECT 
-    COUNT(ALL idgroups)
-FROM
-    students;
-    
+
 SELECT 
     COUNT(DISTINCT idgroups)
 FROM
     students;
     
 SELECT 
-    SUM(`hours`/36)
+    AVG(hours)
 FROM
     discipl;
 
 SELECT 
-    AVG(`hours`)
+    MAX(hours)
 FROM
     discipl;
     
 SELECT 
-    MIN(`hours`)
+    MIN(hours / 36)
 FROM
     discipl;
-    
-/* Группировка значений, полученных при использовании агрегатных функций
-*/
+
+
 SELECT 
     den_ned, COUNT(idgroups)
 FROM
-    `sched`
+    sched
 GROUP BY den_ned;
 
+
 SELECT 
-    `pnamedisc`, AVG(hours)
+    'pnamedisc', count(pnamedisc)
 FROM
     discipl
 GROUP BY pnamedisc;
 
 SELECT 
-    den_ned, idgroups, COUNT(idvid_z)
+    den_ned, idgruops, COUNT(vid_z)
 FROM
-    `sched`
+    sched
 GROUP BY den_ned, idgroups;
 
-/* Самостоятельный запрос на группировку значений
-*/
+
+
 SELECT 
-	num_ned,
-    den_ned,
-    idgroups,
-    COUNT(num_par)
+    'pnamedisc' as 'наименование дисциплины', count(pnamedisc) as 'количетсво повотрений'
 FROM
-    `sched`
-GROUP BY den_ned, idgroups, num_ned;
+    discipl
+where pnamedisc like '%базы данных%'
+GROUP BY pnamedisc
+having count(pnamedisc) > 1;
+
+SELECT knamedisc, COUNT(*) AS num_disciplines
+FROM discipl
+WHERE hours > 50
+GROUP BY knamedisc;
+SELECT knamedisc, AVG(hours) AS avg_hours
+FROM discipl
+GROUP BY knamedisc
+HAVING AVG(hours) > 50;
